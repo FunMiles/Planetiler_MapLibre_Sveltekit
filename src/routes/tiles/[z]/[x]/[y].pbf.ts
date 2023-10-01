@@ -16,7 +16,7 @@ export async function GET({ params }) {
         const z = params.z;
         const x = params.x;
         const y = p - params.y - 1;
-        const result = read.get(params.z, params.x, y);
+        const result = read.get(z, x, y);
 
         if (!result || !result.tile_data_hex) {
             return {

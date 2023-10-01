@@ -1,6 +1,27 @@
+<script context="module" lang="ts">
+	import maplibre from 'maplibre-gl';
+	import { page } from '$app/stores';
+	maplibre.addProtocol('custom', (params, callback) => {
+		// console.log('url is', params.url);
+		fetch(`http://${params.url.split('://')[1]}`)
+			.then((t) => {
+				if (t.status == 200) {
+					t.arrayBuffer().then((arr) => {
+						callback(null, arr, null, null);
+					});
+				} else {
+					callback(new Error(`Tile fetch error: ${t.statusText}`));
+				}
+			})
+			.catch((e) => {
+				callback(new Error(e));
+			});
+		return { cancel: () => {} };
+	});
+</script>
+
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
 
 	import { Map } from 'maplibre-gl';
 
@@ -21,7 +42,8 @@
 		// Replace the origin in the template file with the page origin, as it is where the tile endpoint
 		// run.
 		style.sources.openmaptiles.tiles = style.sources.openmaptiles.tiles.map((s: string) => {
-			return s.replace('@origin@', $page.url.origin);
+			const customOrigin = `custom://${$page.url.origin.split('://')[1]}`;
+			return s.replace('@origin@', customOrigin);
 		});
 
 		map = new Map({
