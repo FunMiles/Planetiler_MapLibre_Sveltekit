@@ -1,3 +1,4 @@
+import { json } from '@sveltejs/kit';
 import Database from 'better-sqlite3';
 import pako from 'pako';
 
@@ -19,9 +20,7 @@ export async function GET({ params }) {
         const result = read.get(z, x, y);
 
         if (!result || !result.tile_data_hex) {
-            return {
-                status: 404
-            }
+            return new Response(undefined, { status: 404 })
         }
         const hexData = result.tile_data_hex;
 
@@ -30,19 +29,19 @@ export async function GET({ params }) {
         let isGzipped = binData[0] === 0x1f && binData[1] === 0x8b;
         if (isGzipped)
             binData = pako.inflate(binData);
-        return {
+
+        return new Response(binData, {
             headers: {
                 'access-control-allow-origin': '*',
                 'Content-type': 'application/octet-stream',
-            },
-            body: binData
-        };
+            }
+        });
+
     } catch (error) {
-        return {
+        return new Response('Did you forget to copy/link the mbtile file to tile_data/planet.mbtiles ?', {
             headers: {
                 'access-control-allow-origin': '*',
-            },
-            body: 'Did you forget to copy/link the mbtile file to tile_data/planet.mbtiles ?'
-        }
+            }
+        })
     }
 }
