@@ -1,11 +1,9 @@
 <script lang="ts">
 	import MapLibre from '../Components/MapLibre.svelte';
-	export let databaseIsOK = true;
-	export let status = 0;
-	console.log('Database is:', databaseIsOK ? 'OK' : 'Not OK');
+	export let data;
 </script>
 
-{#if databaseIsOK}
+{#if data.databaseIsOK}
 	<MapLibre />
 {:else}
 	<h1>Error: Did you forget to copy the tile file?</h1>
