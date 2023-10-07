@@ -2,7 +2,7 @@
 	import maplibre from 'maplibre-gl';
 	import { page } from '$app/stores';
 	maplibre.addProtocol('custom', (params, callback) => {
-		// console.log('url is', params.url);
+		console.log('url is', params.url);
 		fetch(`http://${params.url.split('://')[1]}`)
 			.then((t) => {
 				if (t.status == 200) {
@@ -51,7 +51,7 @@
 			style: style,
 			center: [lon, lat],
 			zoom: zoom,
-			maxZoom: 16,
+			maxZoom: 7,
 			maxTileCacheSize: 5000,
 			refreshExpiredTiles: false
 		});
