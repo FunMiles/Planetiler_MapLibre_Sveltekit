@@ -1,9 +1,24 @@
 import Database from 'better-sqlite3';
 import pako from 'pako';
 import * as fs from 'fs';
+import { program } from 'commander';
+
+program
+    .version('1.0.0', '-v, --version')
+    .option('-f, --from <level>', 'Give the minimum level', '0')
+    .option('-t, --to <level>', 'the maximum level', '6')
+    .usage('[OPTIONS]...');
+
+program.parse();
+
+console.log('options', program.opts())
+const options = program.opts();
+
+const fromLevel = parseInt(options.from);
+const toLevel = parseInt(options.to);
+console.log(`From ${fromLevel} to ${toLevel}`)
 
 const dest_dir = './tile_files';
-let level = 6;
 
 let read;
 try {
@@ -21,41 +36,44 @@ try {
     console.error('Failed to create folder:', error);
     process.exit(1);
 }
-console.log(`All good! Extracting ${1 << (2 * level)} files`);
 
-function write(z, x, y, blob) {
-    let dir_path = `${dest_dir}/${z}/${x}`;
-    let file_path = `${dir_path}/${y}.pbf`;
-    try {
-        if (!fs.existsSync(dir_path))
-            fs.mkdirSync(dir_path, { recursive: true });
-        fs.writeFileSync(file_path, blob);
-    } catch (error) {
-        console.error('Failed to create file folder:', error);
-        process.exit(1);
-    }
-}
+for (let level = fromLevel; level <= toLevel; ++level) {
+    console.log(`All good! Extracting ${1 << (2 * level)} files`);
 
-let z = level;
-for (let x = 0; x < (1 << level); ++x)
-    for (let y = 0; y < (1 << level); ++y) {
+    function write(z, x, y, blob) {
+        let dir_path = `${dest_dir}/${z}/${x}`;
+        let file_path = `${dir_path}/${y}.pbf`;
         try {
-            const result = read.get(z, x, y);
-
-            if (!result || !result.tile_data_hex) {
-                console.error('Could not read database data');
-                process.exit(1);
-            }
-            const hexData = result.tile_data_hex;
-
-
-            let binData = new Uint8Array(hexData.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
-            let isGzipped = binData[0] === 0x1f && binData[1] === 0x8b;
-            if (isGzipped)
-                binData = pako.inflate(binData);
-            write(z, x, y, binData);
-        } catch (err) {
-            console.error('Failed to read database:', err);
+            if (!fs.existsSync(dir_path))
+                fs.mkdirSync(dir_path, { recursive: true });
+            fs.writeFileSync(file_path, blob);
+        } catch (error) {
+            console.error('Failed to create file folder:', error);
             process.exit(1);
         }
     }
+
+    let z = level;
+    for (let x = 0; x < (1 << level); ++x)
+        for (let y = 0; y < (1 << level); ++y) {
+            try {
+                const result = read.get(z, x, (1 << level) - y - 1);
+
+                if (!result || !result.tile_data_hex) {
+                    console.error(`Could not read database data at ${z} ${x} ${y}`, result);
+                    process.exit(1);
+                }
+                const hexData = result.tile_data_hex;
+
+
+                let binData = new Uint8Array(hexData.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
+                let isGzipped = binData[0] === 0x1f && binData[1] === 0x8b;
+                if (isGzipped)
+                    binData = pako.inflate(binData);
+                write(z, x, y, binData);
+            } catch (err) {
+                console.error('Failed to read database:', err);
+                process.exit(1);
+            }
+        }
+}
