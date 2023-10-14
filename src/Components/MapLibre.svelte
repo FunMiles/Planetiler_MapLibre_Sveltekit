@@ -1,21 +1,27 @@
 <script context="module" lang="ts">
 	import maplibre from 'maplibre-gl';
 	import { page } from '$app/stores';
+	import tileDatabase from '$lib/tile_database';
 	maplibre.addProtocol('custom', (params, callback) => {
 		console.log('url is', params.url);
-		fetch(`http://${params.url.split('://')[1]}`)
-			.then((t) => {
-				if (t.status == 200) {
-					t.arrayBuffer().then((arr) => {
-						callback(null, arr, null, null);
-					});
-				} else {
-					callback(new Error(`Tile fetch error: ${t.statusText}`));
-				}
+		const filePath = params.url.split('://')[1];
+		const arg = params.url.match(/\/([0-9]+)\/([0-9]+)\/([0-9]+)\.pbf/);
+		if (arg?.length != 4) return callback(new Error(`Tile fetch error: bad params`));
+		const z = parseInt(arg[1]);
+		const x = parseInt(arg[2]);
+		const y = parseInt(arg[3]);
+		console.log('Args', z, ' ', x, ' ', y);
+
+		const dxres = tileDatabase.mapTiles
+			.where('[z+x+y]')
+			.equals([z, x, y])
+			.toArray()
+			.then((e) => {
+				if (e.length == 1) {
+					callback(null, e[0].data, null, null);
+				} else callback(new Error(e));
 			})
-			.catch((e) => {
-				callback(new Error(e));
-			});
+			.catch('NotFoundError', (e) => callback(new Error(e)));
 		return { cancel: () => {} };
 	});
 </script>
@@ -50,9 +56,9 @@
 			container: container,
 			style: style,
 			center: [lon, lat],
-			zoom: zoom,
-			maxZoom: 7,
-			maxTileCacheSize: 5000,
+			// zoom: zoom,
+			maxZoom: 2,
+			// maxTileCacheSize: 5000,
 			refreshExpiredTiles: false
 		});
 	});

@@ -7,3 +7,5 @@ node_modules
 .env.*
 !.env.example
 *.mbtiles
+tile_files
+tile_data
