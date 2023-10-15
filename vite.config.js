@@ -8,7 +8,7 @@ const config = {
 		strategies: 'generateSW',
 		registerType: "autoUpdate",
 		devOptions: {
-			enabled: true,
+			enabled: false,
 			suppressWarnings: true,
 		},
 		manifest: {

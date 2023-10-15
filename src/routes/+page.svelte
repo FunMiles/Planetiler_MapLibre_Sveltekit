@@ -25,7 +25,7 @@
 			let st = (await tileDatabase?.downloadStatus.where('file').equals(file).first())?.status;
 			console.log('Status is ', st);
 			if (st !== 'loaded') {
-				workerDownload('/0_2.zip');
+				await workerDownload('/0_2.zip');
 				st = (await tileDatabase?.downloadStatus.where('file').equals(file).first())?.status;
 				console.log('Post Status is ', st);
 			}
