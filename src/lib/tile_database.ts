@@ -33,9 +33,5 @@ class MyAppDatabase extends Dexie {
 
 const tileDatabase = browser ? new MyAppDatabase('tiles') : null;
 
-await tileDatabase?.open().catch(function (e) {
-    console.error("Open failed: " + e.stack);
-})
-
 export default tileDatabase;
 

@@ -4,8 +4,7 @@
 	import tileDatabase from '$lib/tile_database';
 
 	if (browser) {
-		console.log('tileDatabase:', tileDatabase);
-		if (tileDatabase?.isOpen())
+		tileDatabase?.on('ready', () => {
 			maplibre.addProtocol('custom', (params, callback) => {
 				const filePath = params.url.split('://')[1];
 				const arg = params.url.match(/\/([0-9]+)\/([0-9]+)\/([0-9]+)\.pbf/);
@@ -26,6 +25,7 @@
 					.catch('NotFoundError', (e) => callback(new Error(e)));
 				return { cancel: () => {} };
 			});
+		});
 	}
 </script>
 

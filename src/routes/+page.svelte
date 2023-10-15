@@ -20,6 +20,9 @@
 	}
 	onMount(async () => {
 		if (browser) {
+			await tileDatabase?.open().catch(function (e) {
+				console.error("Open failed: " + e.stack);
+			})
 			const file = '/0_2.zip';
 			let st = (await tileDatabase?.downloadStatus.where('file').equals(file).first())?.status;
 			if (st !== 'loaded') {

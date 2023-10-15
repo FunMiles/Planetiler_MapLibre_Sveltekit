@@ -3,7 +3,7 @@ import JSZip from "jszip";
 
 const tileDatabasePromise = import("$lib/tile_database").then((m) => m.default);
 
-class Worker implements TileDownloadWorker {
+class DownloadWorker implements TileDownloadWorker {
     async download(url: string): Promise<boolean> {
         const tileDatabase = await tileDatabasePromise;
         let zipFile: JSZip = new JSZip();
@@ -19,13 +19,13 @@ class Worker implements TileDownloadWorker {
 
             const content = result.files[file];
             const data = await content.async('arraybuffer');
-            tileDatabase.mapTiles.put({ z, x, y, data });
+            tileDatabase!.mapTiles.put({ z, x, y, data });
         }
         return true;
     }
 }
 
-const obj = new Worker();
+const obj = new DownloadWorker();
 Comlink.expose({
     download: async (url: string) => { return obj.download(url); }
 });
