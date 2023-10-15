@@ -26,6 +26,7 @@
 </script>
 
 <svelte:head>
+	<meta name="theme-color" content="#317EFB" />
 	{@html webManifest}
 </svelte:head>
 

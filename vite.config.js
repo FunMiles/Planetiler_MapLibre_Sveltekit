@@ -16,6 +16,7 @@ const config = {
 			suppressWarnings: true,
 		},
 		manifest: {
+			"theme_color": "green",
 			icons: [
 				{
 
