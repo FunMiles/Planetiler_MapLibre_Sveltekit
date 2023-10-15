@@ -21,13 +21,10 @@
 	onMount(async () => {
 		if (browser) {
 			const file = '/0_2.zip';
-			console.log('tileDatabase:', tileDatabase, 'and open?', tileDatabase?.isOpen());
 			let st = (await tileDatabase?.downloadStatus.where('file').equals(file).first())?.status;
-			console.log('Status is ', st);
 			if (st !== 'loaded') {
 				await workerDownload('/0_2.zip');
 				st = (await tileDatabase?.downloadStatus.where('file').equals(file).first())?.status;
-				console.log('Post Status is ', st);
 			}
 			status = st || 'unknown';
 		}
