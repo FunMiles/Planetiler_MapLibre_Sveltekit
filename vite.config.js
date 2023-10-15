@@ -6,7 +6,11 @@ const config = {
 	plugins: [sveltekit(),
 	SvelteKitPWA({
 		strategies: 'generateSW',
-		devOptions: { enabled: true },
+		registerType: "autoUpdate",
+		devOptions: {
+			enabled: true,
+			suppressWarnings: true,
+		},
 		manifest: {
 			icons: [
 				{
