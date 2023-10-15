@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import MapLibre from '../Components/MapLibre.svelte';
 
 	import { browser } from '$app/environment';
 	import * as Comlink from 'comlink';
 	import DownloadWorker from '$lib/workers/tile_file_download?worker';
+	import tileDatabase from '$lib/tile_database';
 
 	let status = 'loading';
 
@@ -15,11 +16,20 @@
 		console.log('Got', success);
 		if (success) status = 'loaded';
 		else status = 'error';
+		tileDatabase?.downloadStatus.put({ file: url, status: status });
 	}
 	onMount(async () => {
 		if (browser) {
-			workerDownload('/0_2.zip');
-			// download('/0_2.zip');
+			const file = '/0_2.zip';
+			console.log('tileDatabase:', tileDatabase, 'and open?', tileDatabase?.isOpen());
+			let st = (await tileDatabase?.downloadStatus.where('file').equals(file).first())?.status;
+			console.log('Status is ', st);
+			if (st !== 'loaded') {
+				workerDownload('/0_2.zip');
+				st = (await tileDatabase?.downloadStatus.where('file').equals(file).first())?.status;
+				console.log('Post Status is ', st);
+			}
+			status = st || 'unknown';
 		}
 	});
 </script>

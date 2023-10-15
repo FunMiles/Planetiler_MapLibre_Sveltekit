@@ -2,32 +2,38 @@
 	import maplibre from 'maplibre-gl';
 	import { page } from '$app/stores';
 	import tileDatabase from '$lib/tile_database';
-	maplibre.addProtocol('custom', (params, callback) => {
-		const filePath = params.url.split('://')[1];
-		const arg = params.url.match(/\/([0-9]+)\/([0-9]+)\/([0-9]+)\.pbf/);
-		if (arg?.length != 4) return callback(new Error(`Tile fetch error: bad params`));
-		const z = parseInt(arg[1]);
-		const x = parseInt(arg[2]);
-		const y = parseInt(arg[3]);
 
-		const dxres = tileDatabase.mapTiles
-			.where('[z+x+y]')
-			.equals([z, x, y])
-			.toArray()
-			.then((e) => {
-				if (e.length == 1) {
-					callback(null, e[0].data, null, null);
-				} else callback(new Error(e));
-			})
-			.catch('NotFoundError', (e) => callback(new Error(e)));
-		return { cancel: () => {} };
-	});
+	if (browser) {
+		console.log('tileDatabase:', tileDatabase);
+		if (tileDatabase?.isOpen())
+			maplibre.addProtocol('custom', (params, callback) => {
+				const filePath = params.url.split('://')[1];
+				const arg = params.url.match(/\/([0-9]+)\/([0-9]+)\/([0-9]+)\.pbf/);
+				if (arg?.length != 4) return callback(new Error(`Tile fetch error: bad params`));
+				const z = parseInt(arg[1]);
+				const x = parseInt(arg[2]);
+				const y = parseInt(arg[3]);
+
+				const dxres = tileDatabase.mapTiles
+					.where('[z+x+y]')
+					.equals([z, x, y])
+					.toArray()
+					.then((e) => {
+						if (e.length == 1) {
+							callback(null, e[0].data, null, null);
+						} else callback(new Error(e));
+					})
+					.catch('NotFoundError', (e) => callback(new Error(e)));
+				return { cancel: () => {} };
+			});
+	}
 </script>
 
 <script lang="ts">
 	import { onMount } from 'svelte';
 
 	import { Map } from 'maplibre-gl';
+	import { browser } from '$app/environment';
 
 	export let lat = 40;
 	export let lon = -105.18;
