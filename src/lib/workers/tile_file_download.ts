@@ -8,8 +8,9 @@ class DownloadWorker implements TileDownloadWorker {
     async download(url: string): Promise<boolean> {
         const tileDatabase = await tileDatabasePromise;
         let zipFile: JSZip = new JSZip();
-        console.log('Loading', `${base}/${url}`)
-        const data = await fetch(`${base}/${url}`);
+        const fullURLPath = base === '' ? url : `${base}/${url}`;
+        console.log('Loading', fullURLPath, 'base', base)
+        const data = await fetch(fullURLPath);
         const ab = await data?.arrayBuffer();
         console.log('Size of file', ab?.byteLength);
         const result = await zipFile.loadAsync(ab);
