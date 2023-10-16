@@ -1,14 +1,12 @@
 import * as Comlink from "comlink";
 import JSZip from "jszip";
 import { base } from '$app/paths';
-
-const tileDatabasePromise = import("$lib/tile_database").then((m) => m.default);
+import tileDatabase from '$lib/tile_database';
 
 class DownloadWorker implements TileDownloadWorker {
     async download(url: string): Promise<boolean> {
-        const tileDatabase = await tileDatabasePromise;
         let zipFile: JSZip = new JSZip();
-        const fullURLPath = base === '' ? url : `${base}/${url}`;
+        const fullURLPath = `${base}${url}`;
         console.log('Loading', fullURLPath, 'base', base)
         const data = await fetch(fullURLPath);
         const ab = await data?.arrayBuffer();
