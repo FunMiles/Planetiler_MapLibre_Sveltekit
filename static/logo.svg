@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
-<svg width="210mm" height="297mm" version="1.1" viewBox="0 0 210 297" xmlns="http://www.w3.org/2000/svg">
- <path d="m21.167 47.625 21.167 10.583 21.167-10.583 21.167 10.583v42.333l-21.167-10.583-21.167 10.583-21.167-10.583z" style="fill:none;stroke-width:2.2;stroke:#000"/>
- <path d="m42.333 58.208v42.333" style="fill:none;stroke-width:1.25;stroke:#000"/>
- <path d="m63.5 47.625v42.333" style="fill:none;stroke-width:1.25;stroke:#000"/>
- <text transform="scale(1.0151 .98513)" x="29.906803" y="85.99012" style="font-family:sans-serif;font-size:28.618px;font-weight:bold;line-height:1.25;stroke-width:.33537" xml:space="preserve"><tspan x="29.906803" y="85.99012" style="fill:#0000ff;stroke-width:.33537">ML</tspan></text>
+<svg width="65.7mm" height="56.476mm" version="1.1" viewBox="0 0 65.7 56.476" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(-20.067 -45.845)">
+  <path d="m21.167 47.625 21.167 10.583 21.167-10.583 21.167 10.583v42.333l-21.167-10.583-21.167 10.583-21.167-10.583z" style="fill:none;stroke-width:2.2;stroke:#000"/>
+  <path d="m42.333 58.208v42.333" style="fill:none;stroke-width:1.25;stroke:#000"/>
+  <path d="m63.5 47.625v42.333" style="fill:none;stroke-width:1.25;stroke:#000"/>
+  <text transform="scale(1.0151 .98513)" x="29.906803" y="85.99012" style="font-family:sans-serif;font-size:28.618px;font-weight:bold;line-height:1.25;stroke-width:.33537" xml:space="preserve"><tspan x="29.906803" y="85.99012" style="fill:#0000ff;stroke-width:.33537">ML</tspan></text>
+ </g>
 </svg>

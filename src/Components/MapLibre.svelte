@@ -34,6 +34,7 @@
 
 	import { Map } from 'maplibre-gl';
 	import { browser } from '$app/environment';
+	import { base } from '$app/paths';
 
 	export let lat = 40;
 	export let lon = -105.18;
@@ -48,7 +49,8 @@
 	let map: Map;
 
 	onMount(async () => {
-		const style = await (await fetch('/mystyle.json')).json();
+		console.log('Base path', base);
+		const style = await (await fetch(`${base}/mystyle.json`)).json();
 		// Replace the origin in the template file with the page origin, as it is where the tile endpoint
 		// run.
 		style.sources.openmaptiles.tiles = style.sources.openmaptiles.tiles.map((s: string) => {

@@ -1,5 +1,6 @@
 import * as Comlink from "comlink";
 import JSZip from "jszip";
+import { base } from '$app/paths';
 
 const tileDatabasePromise = import("$lib/tile_database").then((m) => m.default);
 
@@ -7,8 +8,11 @@ class DownloadWorker implements TileDownloadWorker {
     async download(url: string): Promise<boolean> {
         const tileDatabase = await tileDatabasePromise;
         let zipFile: JSZip = new JSZip();
-        const data = await fetch(url);
-        const result = await zipFile.loadAsync(await data.arrayBuffer());
+        console.log('Loading', `${base}/${url}`)
+        const data = await fetch(`${base}/${url}`);
+        const ab = await data?.arrayBuffer();
+        console.log('Size of file', ab?.byteLength);
+        const result = await zipFile.loadAsync(ab);
         for (const file in result.files) {
             const arg = file.match(/([0-9]+)\/([0-9]+)\/([0-9]+)\.pbf/);
             if (arg?.length != 4)
