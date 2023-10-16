@@ -1,0 +1,1 @@
+{"name":"map-libre-demo","short_name":"map-libre-demo","start_url":"./","display":"standalone","background_color":"#ffffff","lang":"en","scope":"./","theme_color":"green","icons":[{"src":"manifest-icon-192.png","sizes":"192x192","type":"image/png","purpose":"maskable any"},{"src":"manifest-icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"}]}
