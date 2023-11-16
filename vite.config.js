@@ -39,7 +39,7 @@ const config = {
 			// use client/ prefix always, the folder for workbox is .svetlekit/output
 			// don't include json files, include specific json names
 			globPatterns: ['client/**/*.{ico,js,css,html,png,jpg,svg}', 'client/mystyle.json'],
-			navigateFallbackDenylist: [/\.zip$/],
+			navigateFallbackDenylist: [/\.zip$/, /\.pmtiles$/],
 		}
 		//   strategies: 'injectManifest',
 		//   srcDir: 'src',
